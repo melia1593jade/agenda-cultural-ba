@@ -1,0 +1,229 @@
+import json
+import os
+from io import BytesIO
+from pathlib import Path
+from typing import List, Literal, Optional
+import requests
+from apify_client import ApifyClient
+from bs4 import BeautifulSoup
+from google import genai
+from google.genai import types
+from PIL import Image
+from pydantic import BaseModel, Field
+
+
+# ==============================================================================
+# CONFIGURACIÓN DE FUENTES (Agregá acá todas las webs e Instagrams que quieras)
+# ==============================================================================
+PAGINAS_WEB = [
+    "https://buenosaires.tur.ar/que-hacer/",
+    "https://palaciolibertad.gob.ar/agenda/",
+    # Agregá más URLs de portales culturales o municipios acá...
+]
+
+PERFILES_INSTAGRAM = [
+    "https://www.instagram.com/dgustarferia/",
+    # "https://www.instagram.com/culturahurlingham/",
+    # "https://www.instagram.com/turismobuenosaires/",
+    # Agregá todos los perfiles públicos de Instagram que quieras acá...
+]
+
+
+# ==============================================================================
+# 1. ESQUEMA ESTRICTO COMPATIBLE CON TU INDEX.HTML
+# ==============================================================================
+class EventoCultural(BaseModel):
+    id: int = Field(description="Número identificador único y correlativo")
+    titulo: str = Field(description="Nombre oficial del evento o feria")
+    categoria: Literal[
+        "Gourmet",
+        "Entretenimiento",
+        "Música y Recitales",
+        "Ferias y Artesanías",
+        "Arte y Cultura",
+    ] = Field(description="Categoría más adecuada según la temática del evento")
+    zona: Literal["Zona Oeste", "Zona Sur", "Zona Norte", "CABA"] = Field(
+        description="Región de Buenos Aires a la que pertenece la localidad"
+    )
+    localidad: str = Field(description="Partido o barrio (ej. Hurlingham, Morón, Palermo, La Plata)")
+    lugar: str = Field(description="Nombre de la plaza, teatro, predio o dirección")
+    organizador: str = Field(description="Institución, municipio, feria o productora que organiza")
+    fecha: str = Field(description="Fecha principal de inicio en formato estricto YYYY-MM-DD (año actual: 2026)")
+    fechaTexto: Optional[str] = Field(
+        default=None,
+        description="Texto legible si abarca varios días (ej. '27, 28 y 29 de noviembre')",
+    )
+    hora: str = Field(description="Horario del evento (ej. '18:00 hs' o '12:00 a 23:00 hs')")
+    precio: str = Field(
+        description="Costo de entrada (ej. 'Gratuito', 'Entrada Libre', 'Pago (desde $15.000)')"
+    )
+    urlCompra: Optional[str] = Field(
+        default=None, description="Enlace de compra si es un evento pago y aparece en la fuente"
+    )
+    reservaPrevia: Optional[bool] = Field(
+        default=False, description="True si es gratuito pero requiere reserva previa"
+    )
+    urlReserva: Optional[str] = Field(
+        default=None, description="Enlace de reserva previa si corresponde"
+    )
+    descripcion: str = Field(
+        description="Resumen claro y atractivo de 2 o 3 oraciones sobre el evento"
+    )
+
+
+class ListaEventos(BaseModel):
+    eventos: List[EventoCultural]
+
+
+# ==============================================================================
+# 2. MÓDULO A: RECOLECCIÓN DESDE PÁGINAS WEB
+# ==============================================================================
+def recolectar_paginas_web(urls: List[str]) -> str:
+    texto_total = ""
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    for url in urls:
+        try:
+            print(f"   [WEB] Leyendo: {url}")
+            resp = requests.get(url, headers=headers, timeout=15)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
+
+            for tag in soup(["script", "style", "nav", "footer", "header"]):
+                tag.decompose()
+
+            texto_limpio = soup.get_text(separator="\n", strip=True)[:15000]
+            texto_total += f"\n--- FUENTE WEB ({url}) ---\n{texto_limpio}\n"
+        except Exception as e:
+            print(f"   [AVISO WEB] No se pudo leer {url}: {e}")
+
+    return texto_total
+
+
+# ==============================================================================
+# 3. MÓDULO B: RECOLECCIÓN DESDE MÚLTIPLES INSTAGRAMS (VÍA APIFY)
+# ==============================================================================
+def recolectar_instagrams(perfiles: List[str], posts_por_perfil: int = 5) -> List[dict]:
+    token = os.environ.get("APIFY_API_TOKEN")
+    if not token or not perfiles:
+        if not token:
+            print("   [AVISO IG] No hay APIFY_API_TOKEN configurado, se omite Instagram.")
+        return []
+
+    print(f"   [IG] Consultando {len(perfiles)} perfiles de Instagram...")
+    client = ApifyClient(token)
+    run_input = {
+        "directUrls": perfiles,
+        "resultsType": "posts",
+        "resultsLimit": posts_por_perfil,
+    }
+
+    run = client.actor("apify/instagram-post-scraper").call(run_input=run_input)
+    posteos = []
+    for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+        posteos.append({
+            "usuario": item.get("ownerUsername", ""),
+            "texto": item.get("caption", ""),
+            "imagen_url": item.get("displayUrl", ""),
+        })
+    return posteos
+
+
+# ==============================================================================
+# 4. MÓDULO C: INTELIGENCIA ARTIFICIAL UNIFICADA (GEMINI MULTIMODAL)
+# ==============================================================================
+def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[dict]:
+    if not os.environ.get("GEMINI_API_KEY"):
+        raise ValueError("Falta configurar la variable de entorno GEMINI_API_KEY.")
+
+    client = genai.Client()
+
+    contenido = [
+        """
+        Sos un sistema de extracción y estructuración de datos culturales de Buenos Aires y CABA.
+        Vas a recibir información de DOS tipos de fuentes:
+        1) Texto extraído de páginas web culturales y turísticas.
+        2) Posteos de Instagram (texto + imagen del flyer) de ferias y agendas locales.
+
+        Reglas obligatorias:
+        - Extraé todos los eventos reales con fecha y lugar (ignorá sorteos, avisos administrativos o posteos sin evento).
+        - En los posteos de Instagram, leé con mucha atención lo que dice DENTRO DE LA IMAGEN del flyer (allí suelen estar la plaza, localidad y fechas exactas).
+        - Inferí correctamente la 'zona' (Zona Oeste, Zona Sur, Zona Norte o CABA) según la localidad o barrio.
+        - Asigná una de las 5 categorías permitidas.
+        - El año actual es 2026. Formateá 'fecha' como YYYY-MM-DD.
+        - No dupliques eventos si aparecen repetidos entre fuentes.
+        """
+    ]
+
+    if texto_webs.strip():
+        contenido.append(f"\n=== CONTENIDO DE PÁGINAS WEB ===\n{texto_webs}")
+
+    for i, post in enumerate(posteos_ig, start=1):
+        contenido.append(
+            f"\n=== POST INSTAGRAM #{i} (@{post['usuario']}) ===\nTexto: {post['texto']}\n"
+        )
+        if post["imagen_url"]:
+            try:
+                img_resp = requests.get(post["imagen_url"], timeout=10)
+                if img_resp.status_code == 200:
+                    contenido.append(Image.open(BytesIO(img_resp.content)))
+            except Exception as e:
+                print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=contenido,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=ListaEventos,
+            temperature=0.1,
+        ),
+    )
+
+    resultado = json.loads(response.text)
+    return resultado.get("eventos", [])
+
+
+# ==============================================================================
+# 5. SINCRONIZACIÓN AUTOMÁTICA DEL JSON SIN PERDER EVENTOS PREVIOS
+# ==============================================================================
+def actualizar_json_historico(nuevos_eventos: List[dict], ruta_json: str = "eventos.json") -> List[dict]:
+    archivo = Path(ruta_json)
+    existentes = []
+    if archivo.exists():
+        existentes = json.loads(archivo.read_text(encoding="utf-8"))
+
+    # Evitamos duplicados comparando título normalizado + fecha
+    vistos = {(ev["titulo"].strip().lower(), ev["fecha"]) for ev in existentes}
+    combinados = list(existentes)
+
+    agregados = 0
+    for ev in nuevos_eventos:
+        clave = (ev["titulo"].strip().lower(), ev["fecha"])
+        if clave not in vistos:
+            vistos.add(clave)
+            combinados.append(ev)
+            agregados += 1
+
+    # Ordenamos cronológicamente y renumeramos los IDs
+    combinados.sort(key=lambda e: e["fecha"])
+    for idx, ev in enumerate(combinados, start=1):
+        ev["id"] = idx
+
+    archivo.write_text(json.dumps(combinados, ensure_ascii=False, indent=4), encoding="utf-8")
+    print(f"[OK] Se agregaron {agregados} eventos nuevos. Total en cartelera: {len(combinados)}.")
+    return combinados
+
+
+if __name__ == "__main__":
+    print("1. Recolectando datos de páginas web...")
+    datos_web = recolectar_paginas_web(PAGINAS_WEB)
+
+    print("2. Recolectando datos e imágenes de perfiles de Instagram...")
+    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=5)
+
+    print("3. Estructurando toda la información con Gemini AI...")
+    eventos_detectados = procesar_todo_con_gemini(datos_web, datos_ig)
+
+    print("4. Actualizando eventos.json automáticamente...")
+    actualizar_json_historico(eventos_detectados, "eventos.json")
