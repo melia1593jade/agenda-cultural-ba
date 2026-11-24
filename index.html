@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Qué hacemos hoy? - Agenda Cultural Buenos Aires</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            brown: '#4E3629',
+                            brownDark: '#3A271D',
+                            brownLight: '#6E4E3C',
+                            cream: '#F8F5F0',
+                            beigeCard: '#EFECE6',
+                            pastelBlue: '#B4CBE3',
+                            pastelBlueHover: '#9FBBD7',
+                            softYellow: '#F3E8C9',
+                            softPink: '#E8D5C8',
+                            softGreen: '#D4E4D1',
+                            sand: '#D9C5B2'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #F8F5F0;
+            color: #4E3629;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .bg-pattern {
+            background-color: #F8F5F0;
+            background-image: repeating-linear-gradient(90deg, rgba(78, 54, 41, 0.02) 0px, rgba(78, 54, 41, 0.02) 1px, transparent 1px, transparent 40px);
+        }
+        .folder-card {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .folder-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Animación de cinta continua (Marquee) */
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marqueeScroll 32s linear infinite;
+        }
+        .marquee-wrapper:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen flex flex-col justify-between">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header class="sticky top-0 z-40 bg-[#F8F5F0]/90 backdrop-blur-md border-b border-brand-sand/35 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-brown text-brand-cream flex items-center justify-center font-serif text-xl font-bold shadow-sm">
+                    BA
+                </div>
+                <div>
+                    <span class="font-serif text-xl md:text-2xl font-bold text-brand-brown tracking-wide">¿Qué hacemos hoy?</span>
+                    <span class="block text-[10px] tracking-widest uppercase text-brand-brownLight font-medium">Agenda Cultural Buenos Aires</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 space-y-6 text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-pastelBlue/30 text-brand-brown
