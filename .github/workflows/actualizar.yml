@@ -1,0 +1,27 @@
+name: Actualizar Agenda Cultural
+on:
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install apify-client google-genai pydantic requests beautifulsoup4 pillow
+      - env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+        run: python extractor_unificado.py
+      - run: |
+          git config --local user.email "bot@github.com"
+          git config --local user.name "Agenda Bot"
+          git add eventos.json
+          git commit -m "Nuevos eventos agregados" || exit 0
+          git push
