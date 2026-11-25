@@ -237,4 +237,11 @@ if __name__ == "__main__":
     print("1. Recolectando datos de páginas web...")
     datos_web = recolectar_paginas_web(PAGINAS_WEB)
 
-    print("2. Recolectando datos e imágenes de
+    print("2. Recolectando datos e imágenes de perfiles de Instagram...")
+    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=5)
+
+    print("3. Estructurando toda la información con Gemini AI...")
+    eventos_detectados = procesar_todo_con_gemini(datos_web, datos_ig)
+
+    print("4. Actualizando eventos.json automáticamente...")
+    actualizar_json_historico(eventos_detectados, "eventos.json")
