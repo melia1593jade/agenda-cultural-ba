@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from typing import List, Literal, Optional
@@ -17,15 +18,23 @@ from pydantic import BaseModel, Field
 # ==============================================================================
 PAGINAS_WEB = [
     "https://buenosaires.tur.ar/que-hacer/",
+    "https://turismo.buenosaires.gob.ar/es/eventos",
     "https://palaciolibertad.gob.ar/agenda/",
+    "https://bairessecreta.com/que-hacer/",
     # Agregá más URLs de portales culturales o municipios acá...
 ]
 
+# Poné solo el nombre de usuario de Instagram (sin @ y sin https://...)
 PERFILES_INSTAGRAM = [
-    "https://www.instagram.com/dgustarferia/",
-    # "https://www.instagram.com/culturahurlingham/",
-    # "https://www.instagram.com/turismobuenosaires/",
-    # Agregá todos los perfiles públicos de Instagram que quieras acá...
+    "dgustarferia",
+    "culturahurlingham",
+    "turismobuenosaires",
+    "lupitadisenoyarte",
+    "westfoodfest",
+    "concienciafestival",
+    "bacultura",
+    "feria.arteycultura",
+    "feriakawaii.arg"
 ]
 
 
@@ -50,7 +59,7 @@ class EventoCultural(BaseModel):
         description="Nombre del espacio y dirección exacta con calle y altura si está disponible (ej. 'Predio Municipal de Hurlingham (Av. Pedro Díaz 1710)' o 'Plaza Dorrego')"
     )
     organizador: str = Field(description="Institución, municipio, feria o productora que organiza")
-    fecha: str = Field(description="Fecha principal de inicio en formato estricto YYYY-MM-DD (año actual: 2026)")
+    fecha: str = Field(description="Fecha principal de inicio en formato estricto YYYY-MM-DD")
     fechaTexto: Optional[str] = Field(
         default=None,
         description="Texto legible si abarca varios días (ej. '27, 28 y 29 de noviembre')",
@@ -105,18 +114,23 @@ def recolectar_paginas_web(urls: List[str]) -> str:
 # ==============================================================================
 # 3. MÓDULO B: RECOLECCIÓN DESDE MÚLTIPLES INSTAGRAMS (VÍA APIFY)
 # ==============================================================================
-def recolectar_instagrams(perfiles: List[str], posts_por_perfil: int = 5) -> List[dict]:
+def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 5) -> List[dict]:
     token = os.environ.get("APIFY_API_TOKEN")
-    if not token or not perfiles:
+    if not token or not usuarios:
         if not token:
             print("   [AVISO IG] No hay APIFY_API_TOKEN configurado, se omite Instagram.")
         return []
 
-    print(f"   [IG] Consultando {len(perfiles)} perfiles de Instagram...")
+    # Limpiamos por si alguien escribe @usuario o la URL completa
+    usuarios_limpios = [
+        u.replace("https://www.instagram.com/", "").replace("@", "").strip("/")
+        for u in usuarios
+    ]
+
+    print(f"   [IG] Consultando perfiles de Instagram: {usuarios_limpios}...")
     client = ApifyClient(token)
     run_input = {
-        "directUrls": perfiles,
-        "resultsType": "posts",
+        "username": usuarios_limpios,
         "resultsLimit": posts_por_perfil,
     }
 
@@ -139,20 +153,23 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
         raise ValueError("Falta configurar la variable de entorno GEMINI_API_KEY.")
 
     client = genai.Client()
+    fecha_actual = datetime.now().strftime("%Y-%m-%d")
 
     contenido = [
-        """
+        f"""
         Sos un sistema de extracción y estructuración de datos culturales de Buenos Aires y CABA.
+        La fecha actual de referencia es {fecha_actual}.
         Vas a recibir información de DOS tipos de fuentes:
         1) Texto extraído de páginas web culturales y turísticas.
         2) Posteos de Instagram (texto + imagen del flyer) de ferias y agendas locales.
 
         Reglas obligatorias:
-        - Extraé todos los eventos reales con fecha y lugar (ignorá sorteos, avisos administrativos o posteos sin evento).
-        - En los posteos de Instagram, leé con mucha atención lo que dice DENTRO DE LA IMAGEN del flyer (allí suelen estar la plaza, localidad y fechas exactas).
+        - Extraé todos los eventos vigentes o próximos (desde {fecha_actual} en adelante) con fecha y lugar. Ignorá sorteos, saludos o eventos ya pasados.
+        - En los posteos de Instagram, leé con mucha atención lo que dice DENTRO DE LA IMAGEN del flyer (allí suelen estar la plaza, dirección exacta, localidad y fechas).
+        - Incluí siempre la dirección con calle y altura entre paréntesis en el campo 'lugar' cuando esté disponible, para que funcione perfecto en Google Maps.
         - Inferí correctamente la 'zona' (Zona Oeste, Zona Sur, Zona Norte o CABA) según la localidad o barrio.
         - Asigná una de las 5 categorías permitidas.
-        - El año actual es 2026. Formateá 'fecha' como YYYY-MM-DD.
+        - Formateá 'fecha' como YYYY-MM-DD.
         - No dupliques eventos si aparecen repetidos entre fuentes.
         """
     ]
