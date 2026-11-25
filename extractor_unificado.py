@@ -126,7 +126,7 @@ def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 5) -> Lis
 
     run = client.actor("apify/instagram-post-scraper").call(run_input=run_input)
     posteos = []
-    for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+    for item in client.dataset(run.default_dataset_id).iterate_items():
         posteos.append({
             "usuario": item.get("ownerUsername", ""),
             "texto": item.get("caption", ""),
