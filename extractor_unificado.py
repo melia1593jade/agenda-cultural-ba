@@ -180,7 +180,7 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
                 print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+       model="gemini-3.8-flash",
         contents=contenido,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
