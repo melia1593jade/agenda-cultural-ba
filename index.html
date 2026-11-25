@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Qué hacemos hoy? - Agenda Cultural Buenos Aires</title>
+    <!-- Ícono personalizado para la pestaña del navegador (Favicon BA) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%234E3629'/%3E%3Ctext x='32' y='41' font-family='Georgia, serif' font-size='26' font-weight='bold' fill='%23F8F5F0' text-anchor='middle'%3EBA%3C/text%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -369,16 +371,37 @@
         // Se carga dinámicamente desde eventos.json
         let eventos = [];
 
+        // Determinar la última fecha vigente de un evento (soporta rangos en fechaTexto como "9 octubre 2026 - 13 diciembre 2026")
+        function getUltimaFechaEvento(evento) {
+            if (evento.fechaFin) return evento.fechaFin;
+            if (evento.fechaTexto) {
+                const mesesMap = {
+                    enero: "01", febrero: "02", marzo: "03", abril: "04",
+                    mayo: "05", junio: "06", julio: "07", agosto: "08",
+                    septiembre: "09", setiembre: "09", octubre: "10", noviembre: "11", diciembre: "12"
+                };
+                const texto = evento.fechaTexto.toLowerCase();
+                const yearBase = (evento.fecha || "2026-01-01").slice(0, 4);
+                const coincidencias = [...texto.matchAll(/(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s*(?:de\s*)?(\d{4}))?/g)];
+                if (coincidencias.length > 0) {
+                    const ultima = coincidencias[coincidencias.length - 1];
+                    const dia = ultima[1].padStart(2, "0");
+                    const mes = mesesMap[ultima[2]];
+                    const anio = ultima[3] || yearBase;
+                    return `${anio}-${mes}-${dia}`;
+                }
+            }
+            return evento.fecha;
+        }
+
         // Generar enlace directo y preciso de búsqueda en Google Maps
         function getGoogleMapsUrl(evento) {
             let lugarLimpio = evento.lugar || "";
 
-            // Si hay dirección exacta entre paréntesis (ej. "Centro Cultural Recoleta (Junín 1930)"), priorizamos esa dirección
             const matchParentesis = lugarLimpio.match(/\(([^)]+\d+[^)]*)\)/);
             if (matchParentesis) {
                 lugarLimpio = matchParentesis[1];
             } else if (lugarLimpio.includes(",")) {
-                // Si hay múltiples sedes separadas por coma, tomamos la sede principal
                 lugarLimpio = lugarLimpio.split(",")[0].trim();
             }
 
@@ -740,7 +763,7 @@
             renderEvents(eventos);
         }
 
-        // Inicialización cargando los datos desde eventos.json y ocultando eventos ya pasados
+        // Inicialización cargando los datos desde eventos.json y descartando eventos ya finalizados
         async function initApp() {
             try {
                 const respuesta = await fetch("eventos.json?t=" + new Date().getTime());
@@ -748,15 +771,15 @@
 
                 const todosLosEventos = await respuesta.json();
 
-                // Obtener fecha de hoy en formato YYYY-MM-DD (hora local)
+                // Fecha de hoy en formato YYYY-MM-DD (hora local)
                 const hoyObj = new Date();
                 const yyyy = hoyObj.getFullYear();
                 const mm = String(hoyObj.getMonth() + 1).padStart(2, '0');
                 const dd = String(hoyObj.getDate()).padStart(2, '0');
                 const fechaHoy = `${yyyy}-${mm}-${dd}`;
 
-                // Filtrar para mostrar únicamente eventos de hoy en adelante
-                eventos = todosLosEventos.filter(ev => ev.fecha >= fechaHoy);
+                // Mostrar únicamente eventos cuya última fecha sea hoy o futura
+                eventos = todosLosEventos.filter(ev => getUltimaFechaEvento(ev) >= fechaHoy);
 
                 // Ordenar cronológicamente del más próximo al más lejano
                 eventos.sort((a, b) => new Date(a.fecha + 'T00:00:00') - new Date(b.fecha + 'T00:00:00'));
