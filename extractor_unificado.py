@@ -46,7 +46,9 @@ class EventoCultural(BaseModel):
         description="Región de Buenos Aires a la que pertenece la localidad"
     )
     localidad: str = Field(description="Partido o barrio (ej. Hurlingham, Morón, Palermo, La Plata)")
-    lugar: str = Field(description="Nombre de la plaza, teatro, predio o dirección")
+    lugar: str = Field(
+        description="Nombre del espacio y dirección exacta con calle y altura si está disponible (ej. 'Predio Municipal de Hurlingham (Av. Pedro Díaz 1710)' o 'Plaza Dorrego')"
+    )
     organizador: str = Field(description="Institución, municipio, feria o productora que organiza")
     fecha: str = Field(description="Fecha principal de inicio en formato estricto YYYY-MM-DD (año actual: 2026)")
     fechaTexto: Optional[str] = Field(
