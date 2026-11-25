@@ -179,18 +179,26 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
             except Exception as e:
                 print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
 
-    response = client.models.generate_content(
-       model="gemini-3.8-flash",
-        contents=contenido,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=ListaEventos,
-            temperature=0.1,
-        ),
-    )
+   modelos_a_probar = ["gemini-3.8-flash", "gemini-2.5-flash-lite"]
+    response = None
+    for modelo in modelos_a_probar:
+        try:
+            print(f"   [IA] Analizando con {modelo}...")
+            response = client.models.generate_content(
+                model=modelo,
+                contents=contenido,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=ListaEventos,
+                    temperature=0.1,
+                ),
+            )
+            break
+        except Exception as e:
+            print(f"   [AVISO IA] {modelo} ocupado o no disponible ({e}), probando respaldo...")
 
-    resultado = json.loads(response.text)
-    return resultado.get("eventos", [])
+    if response is None:
+        raise RuntimeError("Todos los modelos de Gemini están ocupados en este momento.")
 
 
 # ==============================================================================
