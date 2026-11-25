@@ -369,24 +369,23 @@
         // Se carga dinámicamente desde eventos.json
         let eventos = [];
 
-       // Generar enlace directo y preciso de búsqueda en Google Maps
+        // Generar enlace directo y preciso de búsqueda en Google Maps
         function getGoogleMapsUrl(evento) {
             let lugarLimpio = evento.lugar || "";
 
-            // Si hay una dirección exacta entre paréntesis, ej: "Centro Cultural Recoleta (Junín 1930)", priorizamos esa calle y altura
+            // Si hay dirección exacta entre paréntesis (ej. "Centro Cultural Recoleta (Junín 1930)"), priorizamos esa dirección
             const matchParentesis = lugarLimpio.match(/\(([^)]+\d+[^)]*)\)/);
             if (matchParentesis) {
                 lugarLimpio = matchParentesis[1];
             } else if (lugarLimpio.includes(",")) {
-                // Si hay múltiples sedes separadas por coma, tomamos la primera sede principal
+                // Si hay múltiples sedes separadas por coma, tomamos la sede principal
                 lugarLimpio = lugarLimpio.split(",")[0].trim();
             }
 
-            // Evitamos duplicar la localidad si ya está escrita dentro del nombre del lugar
             const incluyeLocalidad = lugarLimpio.toLowerCase().includes(evento.localidad.toLowerCase());
             const region = evento.zona === "CABA" ? "CABA, Argentina" : "Provincia de Buenos Aires, Argentina";
-            
-            const ubicacionFinal = incluyeLocalidad 
+
+            const ubicacionFinal = incluyeLocalidad
                 ? `${lugarLimpio}, ${region}`
                 : `${lugarLimpio}, ${evento.localidad}, ${region}`;
 
@@ -741,13 +740,23 @@
             renderEvents(eventos);
         }
 
-        // Inicialización cargando los datos desde eventos.json
+        // Inicialización cargando los datos desde eventos.json y ocultando eventos ya pasados
         async function initApp() {
             try {
-                const respuesta = await fetch("eventos.json");
+                const respuesta = await fetch("eventos.json?t=" + new Date().getTime());
                 if (!respuesta.ok) throw new Error("No se pudo cargar eventos.json");
 
-                eventos = await respuesta.json();
+                const todosLosEventos = await respuesta.json();
+
+                // Obtener fecha de hoy en formato YYYY-MM-DD (hora local)
+                const hoyObj = new Date();
+                const yyyy = hoyObj.getFullYear();
+                const mm = String(hoyObj.getMonth() + 1).padStart(2, '0');
+                const dd = String(hoyObj.getDate()).padStart(2, '0');
+                const fechaHoy = `${yyyy}-${mm}-${dd}`;
+
+                // Filtrar para mostrar únicamente eventos de hoy en adelante
+                eventos = todosLosEventos.filter(ev => ev.fecha >= fechaHoy);
 
                 // Ordenar cronológicamente del más próximo al más lejano
                 eventos.sort((a, b) => new Date(a.fecha + 'T00:00:00') - new Date(b.fecha + 'T00:00:00'));
@@ -761,7 +770,7 @@
                 document.getElementById("eventsGrid").innerHTML = `
                     <div class="col-span-full text-center py-10 text-brand-brown bg-brand-beigeCard rounded-2xl p-6">
                         <p class="font-bold">No se pudieron cargar los eventos desde eventos.json</p>
-                        <p class="text-xs mt-1">Si lo estás abriendo en tu computadora, usá Live Server o GitHub Pages.</p>
+                        <p class="text-xs mt-1">Verificá que eventos.json esté en la misma carpeta.</p>
                     </div>
                 `;
             }
