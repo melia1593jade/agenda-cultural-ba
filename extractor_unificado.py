@@ -179,7 +179,7 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
             except Exception as e:
                 print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
 
-   modelos_a_probar = ["gemini-3.8-flash", "gemini-2.5-flash-lite"]
+    modelos_a_probar = ["gemini-3.8-flash", "gemini-2.5-flash-lite"]
     response = None
     for modelo in modelos_a_probar:
         try:
@@ -199,6 +199,9 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
 
     if response is None:
         raise RuntimeError("Todos los modelos de Gemini están ocupados en este momento.")
+
+    resultado = json.loads(response.text)
+    return resultado.get("eventos", [])
 
 
 # ==============================================================================
@@ -234,11 +237,4 @@ if __name__ == "__main__":
     print("1. Recolectando datos de páginas web...")
     datos_web = recolectar_paginas_web(PAGINAS_WEB)
 
-    print("2. Recolectando datos e imágenes de perfiles de Instagram...")
-    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=5)
-
-    print("3. Estructurando toda la información con Gemini AI...")
-    eventos_detectados = procesar_todo_con_gemini(datos_web, datos_ig)
-
-    print("4. Actualizando eventos.json automáticamente...")
-    actualizar_json_historico(eventos_detectados, "eventos.json")
+    print("2. Recolectando datos e imágenes de
