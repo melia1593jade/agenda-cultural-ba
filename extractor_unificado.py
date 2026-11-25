@@ -14,18 +14,21 @@ from pydantic import BaseModel, Field
 
 
 # ==============================================================================
-# CONFIGURACIÓN DE FUENTES (Agregá acá todas las webs e Instagrams que quieras)
+# CONFIGURACIÓN DE FUENTES (Con todas tus páginas web y perfiles de Instagram)
 # ==============================================================================
 PAGINAS_WEB = [
     "https://buenosaires.tur.ar/que-hacer/",
     "https://turismo.buenosaires.gob.ar/es/que-hacer-en-la-ciudad",
+    "https://bairessecreta.com/que-hacer/",
 ]
 
-# Poné solo el nombre de usuario de Instagram (sin @ y sin https://...)
 PERFILES_INSTAGRAM = [
     "dgustarferia",
-    # "culturahurlingham",
-    # "turismobuenosaires",
+    "bacultura",
+    "lupitadisenoyarte",
+    "westfoodfest",
+    "feriakawaii.arg",
+    "turismobuenosairesok",
 ]
 
 
@@ -105,7 +108,7 @@ def recolectar_paginas_web(urls: List[str]) -> str:
 # ==============================================================================
 # 3. MÓDULO B: RECOLECCIÓN DESDE MÚLTIPLES INSTAGRAMS (VÍA APIFY)
 # ==============================================================================
-def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 5) -> List[dict]:
+def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 4) -> List[dict]:
     token = os.environ.get("APIFY_API_TOKEN")
     if not token or not usuarios:
         if not token:
@@ -179,7 +182,7 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
             except Exception as e:
                 print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
 
-    modelos_a_probar = ["gemini-3.8-flash", "gemini-2.5-flash-lite"]
+    modelos_a_probar = ["gemini-3.8-flash", "gemini-3.5-flash-lite"]
     response = None
     for modelo in modelos_a_probar:
         try:
@@ -238,7 +241,7 @@ if __name__ == "__main__":
     datos_web = recolectar_paginas_web(PAGINAS_WEB)
 
     print("2. Recolectando datos e imágenes de perfiles de Instagram...")
-    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=5)
+    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=4)
 
     print("3. Estructurando toda la información con Gemini AI...")
     eventos_detectados = procesar_todo_con_gemini(datos_web, datos_ig)
