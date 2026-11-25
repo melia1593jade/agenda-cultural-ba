@@ -18,23 +18,14 @@ from pydantic import BaseModel, Field
 # ==============================================================================
 PAGINAS_WEB = [
     "https://buenosaires.tur.ar/que-hacer/",
-    "https://turismo.buenosaires.gob.ar/es/eventos",
-    "https://palaciolibertad.gob.ar/agenda/",
-    "https://bairessecreta.com/que-hacer/",
-    # Agregá más URLs de portales culturales o municipios acá...
+    "https://turismo.buenosaires.gob.ar/es/que-hacer-en-la-ciudad",
 ]
 
 # Poné solo el nombre de usuario de Instagram (sin @ y sin https://...)
 PERFILES_INSTAGRAM = [
     "dgustarferia",
-    "culturahurlingham",
-    "turismobuenosaires",
-    "lupitadisenoyarte",
-    "westfoodfest",
-    "concienciafestival",
-    "bacultura",
-    "feria.arteycultura",
-    "feriakawaii.arg"
+    # "culturahurlingham",
+    # "turismobuenosaires",
 ]
 
 
@@ -121,7 +112,6 @@ def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 5) -> Lis
             print("   [AVISO IG] No hay APIFY_API_TOKEN configurado, se omite Instagram.")
         return []
 
-    # Limpiamos por si alguien escribe @usuario o la URL completa
     usuarios_limpios = [
         u.replace("https://www.instagram.com/", "").replace("@", "").strip("/")
         for u in usuarios
@@ -212,7 +202,6 @@ def actualizar_json_historico(nuevos_eventos: List[dict], ruta_json: str = "even
     if archivo.exists():
         existentes = json.loads(archivo.read_text(encoding="utf-8"))
 
-    # Evitamos duplicados comparando título normalizado + fecha
     vistos = {(ev["titulo"].strip().lower(), ev["fecha"]) for ev in existentes}
     combinados = list(existentes)
 
@@ -224,7 +213,6 @@ def actualizar_json_historico(nuevos_eventos: List[dict], ruta_json: str = "even
             combinados.append(ev)
             agregados += 1
 
-    # Ordenamos cronológicamente y renumeramos los IDs
     combinados.sort(key=lambda e: e["fecha"])
     for idx, ev in enumerate(combinados, start=1):
         ev["id"] = idx
