@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
@@ -97,7 +98,7 @@ def recolectar_paginas_web(urls: List[str]) -> str:
             for tag in soup(["script", "style", "nav", "footer", "header"]):
                 tag.decompose()
 
-            texto_limpio = soup.get_text(separator="\n", strip=True)[:15000]
+            texto_limpio = soup.get_text(separator="\n", strip=True)[:10000]
             texto_total += f"\n--- FUENTE WEB ({url}) ---\n{texto_limpio}\n"
         except Exception as e:
             print(f"   [AVISO WEB] No se pudo leer {url}: {e}")
@@ -108,7 +109,7 @@ def recolectar_paginas_web(urls: List[str]) -> str:
 # ==============================================================================
 # 3. MÓDULO B: RECOLECCIÓN DESDE MÚLTIPLES INSTAGRAMS (VÍA APIFY)
 # ==============================================================================
-def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 4) -> List[dict]:
+def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 2) -> List[dict]:
     token = os.environ.get("APIFY_API_TOKEN")
     if not token or not usuarios:
         if not token:
@@ -139,7 +140,7 @@ def recolectar_instagrams(usuarios: List[str], posts_por_perfil: int = 4) -> Lis
 
 
 # ==============================================================================
-# 4. MÓDULO C: INTELIGENCIA ARTIFICIAL UNIFICADA (GEMINI MULTIMODAL)
+# 4. MÓDULO C: INTELIGENCIA ARTIFICIAL UNIFICADA CON REINTENTOS Y OPTIMIZACIÓN
 # ==============================================================================
 def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[dict]:
     if not os.environ.get("GEMINI_API_KEY"):
@@ -178,30 +179,43 @@ def procesar_todo_con_gemini(texto_webs: str, posteos_ig: List[dict]) -> List[di
             try:
                 img_resp = requests.get(post["imagen_url"], timeout=10)
                 if img_resp.status_code == 200:
-                    contenido.append(Image.open(BytesIO(img_resp.content)))
+                    img = Image.open(BytesIO(img_resp.content))
+                    img.thumbnail((800, 800))
+                    contenido.append(img)
             except Exception as e:
                 print(f"   [AVISO] No se pudo descargar imagen de @{post['usuario']}: {e}")
 
-    modelos_a_probar = ["gemini-3.8-flash", "gemini-3.5-flash-lite"]
+    modelos_a_probar = [
+        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-pro",
+        "gemini-2.5-pro",
+    ]
     response = None
-    for modelo in modelos_a_probar:
-        try:
-            print(f"   [IA] Analizando con {modelo}...")
-            response = client.models.generate_content(
-                model=modelo,
-                contents=contenido,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=ListaEventos,
-                    temperature=0.1,
-                ),
-            )
+
+    for intento in range(1, 4):
+        for modelo in modelos_a_probar:
+            try:
+                print(f"   [IA] Intento {intento} - Analizando con {modelo}...")
+                response = client.models.generate_content(
+                    model=modelo,
+                    contents=contenido,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=ListaEventos,
+                        temperature=0.1,
+                    ),
+                )
+                break
+            except Exception as e:
+                print(f"   [AVISO IA] {modelo} ocupado ({e}), probando siguiente...")
+        if response is not None:
             break
-        except Exception as e:
-            print(f"   [AVISO IA] {modelo} ocupado o no disponible ({e}), probando respaldo...")
+        print("   [ESPERA] Servidores con alta demanda, reintentando en 15 segundos...")
+        time.sleep(15)
 
     if response is None:
-        raise RuntimeError("Todos los modelos de Gemini están ocupados en este momento.")
+        raise RuntimeError("Todos los modelos de Gemini están ocupados tras 3 rondas de reintentos.")
 
     resultado = json.loads(response.text)
     return resultado.get("eventos", [])
@@ -218,7 +232,6 @@ def actualizar_json_historico(nuevos_eventos: List[dict], ruta_json: str = "even
 
     fecha_hoy = datetime.now().strftime("%Y-%m-%d")
 
-    # Conservamos solo los eventos cuya fecha sea hoy o futura
     vigentes = [ev for ev in existentes if ev.get("fecha", "") >= fecha_hoy]
 
     vistos = {(ev["titulo"].strip().lower(), ev["fecha"]) for ev in vigentes}
@@ -248,7 +261,7 @@ if __name__ == "__main__":
     datos_web = recolectar_paginas_web(PAGINAS_WEB)
 
     print("2. Recolectando datos e imágenes de perfiles de Instagram...")
-    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=4)
+    datos_ig = recolectar_instagrams(PERFILES_INSTAGRAM, posts_por_perfil=2)
 
     print("3. Estructurando toda la información con Gemini AI...")
     eventos_detectados = procesar_todo_con_gemini(datos_web, datos_ig)
