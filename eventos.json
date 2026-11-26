@@ -1,34 +1,6 @@
 [
     {
         "id": 1,
-        "titulo": "Ruta del Café de Especialidad y Pastelería",
-        "categoria": "Gourmet",
-        "zona": "CABA",
-        "localidad": "Palermo",
-        "lugar": "Circuito Palermo Soho",
-        "organizador": "Colectivo Tostadores Porteños",
-        "fecha": "2026-11-25",
-        "hora": "16:00 hs",
-        "precio": "Consumición en locales",
-        "descripcion": "Degustaciones guiadas de cafés filtrados, laminados franceses y talleres de arte latte."
-    },
-    {
-        "id": 2,
-        "titulo": "Dribbling",
-        "categoria": "Arte y Cultura",
-        "zona": "CABA",
-        "localidad": "San Nicolás",
-        "lugar": "Paseo La Plaza - Sala Pablo Neruda (Av. Corrientes 1660)",
-        "organizador": "Paseo La Plaza",
-        "fecha": "2026-11-25",
-        "fechaTexto": "Miércoles",
-        "hora": "20:15 hs",
-        "precio": "Pago (desde $55.000)",
-        "urlCompra": "https://www.paseolaplaza.com.ar/obras",
-        "descripcion": "Thriller dramático protagonizado por Carlos Portaluppi y Franco Masini sobre una estrella del fútbol europeo que enfrenta una grave denuncia y la presión mediática."
-    },
-    {
-        "id": 3,
         "titulo": "21º Festival de Cine Latinoamericano",
         "categoria": "Arte y Cultura",
         "zona": "Zona Sur",
@@ -45,7 +17,7 @@
         "descripcion": "Festival de cine independiente regional, nacional e internacional con proyección de largometrajes y cortometrajes. La propuesta incluye conferencias, talleres y seminarios formativos abiertos al público en distintos puntos de la ciudad."
     },
     {
-        "id": 4,
+        "id": 2,
         "titulo": "23º Fiesta del Provinciano",
         "categoria": "Arte y Cultura",
         "zona": "Zona Sur",
@@ -62,7 +34,7 @@
         "descripcion": "Tradicional celebración con shows folklóricos, danzas tradicionales, feria y desfile de centros tradicionalistas. Contará con la elección de embajadores provincianos y el clásico Pericón Nacional sobre la Avenida Montevideo."
     },
     {
-        "id": 5,
+        "id": 3,
         "titulo": "78º Fiesta Anual Tradicionalista",
         "categoria": "Arte y Cultura",
         "zona": "Zona Sur",
@@ -79,7 +51,7 @@
         "descripcion": "Encuentro tradicionalista con espectáculos musicales, danzas típicas y destrezas criollas. Incluye la semifinal clasificatoria para el Festival de Jesús María por la Provincia de Buenos Aires y tropillas entabladas."
     },
     {
-        "id": 6,
+        "id": 4,
         "titulo": "Festival de Jazz Argentino FEJA 2026",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -96,7 +68,7 @@
         "descripcion": "Cuarta edición del festival que convierte a Buenos Aires en la capital del jazz nacional con múltiples conciertos y sedes."
     },
     {
-        "id": 7,
+        "id": 5,
         "titulo": "Retiro Abierto",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -113,7 +85,7 @@
         "descripcion": "Encuentro cultural para redescubrir el barrio con galerías abiertas por la noche, visitas a palacios, música en vivo y un gran concierto."
     },
     {
-        "id": 8,
+        "id": 6,
         "titulo": "Semana de los Festivales de Cine de Málaga y San Sebastián en Buenos Aires",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -130,7 +102,7 @@
         "descripcion": "Exhibición de películas del cine español contemporáneo con encuentros junto a sus realizadores, elencos y productores."
     },
     {
-        "id": 9,
+        "id": 7,
         "titulo": "11º Enduro del Atlántico en Claromecó",
         "categoria": "Entretenimiento",
         "zona": "Zona Sur",
@@ -147,7 +119,7 @@
         "descripcion": "Competencia deportiva de motociclismo, cuatriciclos, Supercross y SuperQuads en la costa de Claromecó. Participarán pilotos nacionales e internacionales en circuitos de playa y pista durante tres intensas jornadas."
     },
     {
-        "id": 10,
+        "id": 8,
         "titulo": "Festival Konex de Música Clásica",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -162,6 +134,40 @@
         "reservaPrevia": true,
         "urlReserva": null,
         "descripcion": "Gala sinfónica gratuita con piezas épicas de El cascanueces, El lago de los cisnes y Carmen en un imponente salón."
+    },
+    {
+        "id": 9,
+        "titulo": "11º Enduro del Atlántico",
+        "categoria": "Entretenimiento",
+        "zona": "Zona Sur",
+        "localidad": "Tres Arroyos",
+        "lugar": "Playas y pista de motos de Claromecó",
+        "organizador": "Asociación Alta Velocidad y Municipalidad de Tres Arroyos",
+        "fecha": "2026-11-27",
+        "fechaTexto": "27 al 29 de noviembre",
+        "hora": "Desde las 8:00 hs",
+        "precio": "Pago",
+        "urlCompra": "https://endurodelatlantico.com/cronograma",
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Competencia de motociclismo, cuatriciclismo, Supercross y SuperQuads con pilotos nacionales e internacionales en las playas de Claromecó."
+    },
+    {
+        "id": 10,
+        "titulo": "Semana de los Festivales de Málaga & San Sebastián en Buenos Aires (MASS)",
+        "categoria": "Arte y Cultura",
+        "zona": "CABA",
+        "localidad": "CABA",
+        "lugar": "Centro Cultural 25 de Mayo (Av. Triunvirato 4444)",
+        "organizador": "Festival de Málaga y Festival de San Sebastián",
+        "fecha": "2026-11-27",
+        "fechaTexto": "27 al 28 de noviembre",
+        "hora": "Funciones en taquilla",
+        "precio": "Gratuito",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Proyección de seis películas con producción española destacadas en los festivales de Málaga y San Sebastián."
     },
     {
         "id": 11,
@@ -308,6 +314,57 @@
     },
     {
         "id": 20,
+        "titulo": "Primavera Sound 2026",
+        "categoria": "Música y Recitales",
+        "zona": "CABA",
+        "localidad": "CABA",
+        "lugar": "Buenos Aires",
+        "organizador": "Primavera Sound",
+        "fecha": "2026-11-28",
+        "fechaTexto": "28 y 29 de noviembre",
+        "hora": "Horario general",
+        "precio": "Pago",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Edición del reconocido festival internacional de música con shows extendidos de grandes artistas y bandas internacionales."
+    },
+    {
+        "id": 21,
+        "titulo": "Festival Konex de Música Clásica",
+        "categoria": "Música y Recitales",
+        "zona": "CABA",
+        "localidad": "CABA",
+        "lugar": "Facultad de Derecho de la UBA",
+        "organizador": "Fundación Konex",
+        "fecha": "2026-11-28",
+        "fechaTexto": "28 y 29 de noviembre",
+        "hora": "Horario general",
+        "precio": "Gratuito",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Gran gala sinfónica de cierre con interpretación de obras célebres como El Cascanueces y El lago de los cisnes en un marco imponente."
+    },
+    {
+        "id": 22,
+        "titulo": "25 Aniversario Museo Nacional de Aeronáutica",
+        "categoria": "Entretenimiento",
+        "zona": "Zona Oeste",
+        "localidad": "Morón",
+        "lugar": "Museo Nacional de Aeronáutica (Av. Eva Perón 2200)",
+        "organizador": "Museo Nacional de Aeronáutica / Base Aérea de Morón",
+        "fecha": "2026-11-28",
+        "fechaTexto": "28 y 29 de noviembre",
+        "hora": "10:00 a 18:00 hs",
+        "precio": "Pago (desde $10.000)",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Gran festejo por el aniversario del museo con exposición de aeronaves históricas, stands gastronómicos y actividades para toda la familia."
+    },
+    {
+        "id": 23,
         "titulo": "Hot Wheels City Experience",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -322,7 +379,7 @@
         "descripcion": "Experiencia interactiva que combina velocidad y diversión para toda la familia con estaciones temáticas, autos emblemáticos, Zona Gamer, Museo Hot Wheels y un circuito de karting."
     },
     {
-        "id": 21,
+        "id": 24,
         "titulo": "La Casa de Bluey",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -337,7 +394,24 @@
         "descripcion": "Experiencia inmersiva de la serie infantil con sonido de alta definición, mapping, iluminación y recursos visuales para recorrer la casa de Bluey, cumplir misiones sorpresa y resolver desafíos interactivos."
     },
     {
-        "id": 22,
+        "id": 25,
+        "titulo": "Festival de Sitges en Buenos Aires",
+        "categoria": "Arte y Cultura",
+        "zona": "CABA",
+        "localidad": "CABA",
+        "lugar": "Centro Cultural 25 de Mayo (Av. Triunvirato 4444)",
+        "organizador": "Ministerio de Cultura GCBA",
+        "fecha": "2026-12-04",
+        "fechaTexto": "4 al 6 de diciembre",
+        "hora": "Horario de funciones",
+        "precio": "Gratuito",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Décima semana del festival de cine fantástico catalán con la proyección de largometrajes destacados de su última edición."
+    },
+    {
+        "id": 26,
         "titulo": "Fiesta del Queso Tandilero",
         "categoria": "Gourmet",
         "zona": "Zona Sur",
@@ -351,7 +425,7 @@
         "descripcion": "Fiesta popular en cercanías del Parque Independencia que celebra la tradición quesera de Tandil con stands de venta de productos locales, clases de cocina, capacitaciones, sector de juegos infantiles, espectáculos musicales, patio de comidas y foodtrucks."
     },
     {
-        "id": 23,
+        "id": 27,
         "titulo": "D'gustar: Festival de Colectividades en Mercedes",
         "categoria": "Gourmet",
         "zona": "Zona Oeste",
@@ -368,7 +442,7 @@
         "descripcion": "Gran feria gastronómica con más de 30 puestos con platos típicos y sabores internacionales para disfrutar en familia. Habrá más de 30 shows en vivo durante el fin de semana largo, con los cierres de Las Guerreras K-pop, G Sony y El Súper Quinteto."
     },
     {
-        "id": 24,
+        "id": 28,
         "titulo": "Festival de Colectividades D'gustar en Mercedes",
         "categoria": "Gourmet",
         "zona": "Zona Sur",
@@ -385,7 +459,7 @@
         "descripcion": "Cuatro días con más de 30 propuestas gastronómicas de platos típicos del mundo, shows en vivo y cierres musicales destacados."
     },
     {
-        "id": 25,
+        "id": 29,
         "titulo": "Pop Fest 101.5",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -402,7 +476,7 @@
         "descripcion": "Festival musical pop en Parque Norte para iniciar los festejos de fin de año."
     },
     {
-        "id": 26,
+        "id": 30,
         "titulo": "Recital de El Kuelgue",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -419,7 +493,7 @@
         "descripcion": "Presentación en vivo de la banda El Kuelgue en la Ciudad de Buenos Aires."
     },
     {
-        "id": 27,
+        "id": 31,
         "titulo": "El Kuelgue en C Art Media",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -436,7 +510,7 @@
         "descripcion": "Presentación en vivo de la reconocida banda en el espacio cultural de Chacarita."
     },
     {
-        "id": 28,
+        "id": 32,
         "titulo": "Festival de Colectividades en Mercedes",
         "categoria": "Gourmet",
         "zona": "Zona Oeste",
@@ -453,7 +527,24 @@
         "descripcion": "Feria con más de 30 propuestas gastronómicas típicas del mundo, espectáculos en vivo y shows musicales de cierre."
     },
     {
-        "id": 29,
+        "id": 33,
+        "titulo": "El Kuelgue en vivo",
+        "categoria": "Música y Recitales",
+        "zona": "CABA",
+        "localidad": "CABA",
+        "lugar": "C Art Media (CABA)",
+        "organizador": "C Art Media",
+        "fecha": "2026-12-05",
+        "fechaTexto": "5 y 6 de diciembre",
+        "hora": "Horario nocturno",
+        "precio": "Pago",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Presentación en vivo de la banda El Kuelgue con su propuesta musical ecléctica y festiva."
+    },
+    {
+        "id": 34,
         "titulo": "Recital de Diego Torres",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -470,7 +561,7 @@
         "descripcion": "Concierto imperdible de Diego Torres repasando sus grandes éxitos en el estadio cubierto."
     },
     {
-        "id": 30,
+        "id": 35,
         "titulo": "Diego Torres en el Movistar Arena",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -487,7 +578,24 @@
         "descripcion": "Concierto exclusivo del consagrado artista pop en el estadio cerrado de Villa Crespo."
     },
     {
-        "id": 31,
+        "id": 36,
+        "titulo": "Diego Torres en concierto",
+        "categoria": "Música y Recitales",
+        "zona": "CABA",
+        "localidad": "Villa Crespo",
+        "lugar": "Movistar Arena (Humboldt 450)",
+        "organizador": "Movistar Arena",
+        "fecha": "2026-12-06",
+        "fechaTexto": "6 de diciembre",
+        "hora": "21:00 hs",
+        "precio": "Pago",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Show imperdible del reconocido cantautor argentino repasando sus grandes éxitos."
+    },
+    {
+        "id": 37,
         "titulo": "Recital de Ángela Torres",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -504,7 +612,7 @@
         "descripcion": "Presentación en vivo de Ángela Torres en doble fecha dentro de la agenda de diciembre."
     },
     {
-        "id": 32,
+        "id": 38,
         "titulo": "Ángela Torres en el Movistar Arena",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -521,7 +629,24 @@
         "descripcion": "Presentación musical de la talentosa artista en doble fecha."
     },
     {
-        "id": 33,
+        "id": 39,
+        "titulo": "Ángela Torres en concierto",
+        "categoria": "Música y Recitales",
+        "zona": "CABA",
+        "localidad": "Villa Crespo",
+        "lugar": "Movistar Arena (Humboldt 450)",
+        "organizador": "Movistar Arena",
+        "fecha": "2026-12-08",
+        "fechaTexto": "8 y 9 de diciembre",
+        "hora": "21:00 hs",
+        "precio": "Pago",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Presentaciones musicales de la artista con un despliegue escénico único."
+    },
+    {
+        "id": 40,
         "titulo": "Recital de Maná",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -538,7 +663,7 @@
         "descripcion": "Mega concierto de la banda de rock mexicana Maná en el Estadio Monumental."
     },
     {
-        "id": 34,
+        "id": 41,
         "titulo": "Maná en el Estadio Monumental",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -555,7 +680,7 @@
         "descripcion": "La mítica banda de rock latino se presenta en el estadio de River Plate en el marco de su gira."
     },
     {
-        "id": 35,
+        "id": 42,
         "titulo": "Recital de Airbag",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -572,7 +697,7 @@
         "descripcion": "Presentación masiva de la banda de rock Airbag en el Estadio Monumental."
     },
     {
-        "id": 36,
+        "id": 43,
         "titulo": "Airbag en el Estadio Monumental",
         "categoria": "Música y Recitales",
         "zona": "CABA",
@@ -589,7 +714,7 @@
         "descripcion": "La aclamada banda de rock nacional llega al Monumental con un show masivo."
     },
     {
-        "id": 37,
+        "id": 44,
         "titulo": "Fiesta La Mágica - Despedida del Año",
         "categoria": "Entretenimiento",
         "zona": "CABA",
@@ -604,7 +729,7 @@
         "descripcion": "Fiesta de cumbia al aire libre frente al río en Costanera Norte con shows en vivo y DJs residentes para cerrar el año."
     },
     {
-        "id": 38,
+        "id": 45,
         "titulo": "D'gustar: Fiesta de las Colectividades en Gral. Las Heras",
         "categoria": "Gourmet",
         "zona": "Zona Oeste",
@@ -621,7 +746,7 @@
         "descripcion": "Feria de las colectividades con comidas típicas del mundo, artesanos y espectáculos culturales. El escenario contará con artistas locales y los shows estelares de G Sony, Las Guerreras K-pop y Grupo Anaconda."
     },
     {
-        "id": 39,
+        "id": 46,
         "titulo": "Festival de Colectividades D'gustar en Gral. Las Heras",
         "categoria": "Gourmet",
         "zona": "Zona Oeste",
@@ -638,7 +763,7 @@
         "descripcion": "Feria con comidas del mundo, espectáculos artísticos, música en vivo y más de 30 propuestas gastronómicas."
     },
     {
-        "id": 40,
+        "id": 47,
         "titulo": "Parque Navideño en Ituzaingó",
         "categoria": "Ferias y Artesanías",
         "zona": "Zona Oeste",
@@ -655,7 +780,7 @@
         "descripcion": "Finde temático navideño con premiaciones deportivas, bandas en vivo, parque navideño, shows infantiles, personajes festivos y espacio de pausa sensorial."
     },
     {
-        "id": 41,
+        "id": 48,
         "titulo": "Final del 133° Abierto Argentino de Polo",
         "categoria": "Entretenimiento",
         "zona": "CABA",
@@ -672,7 +797,7 @@
         "descripcion": "Partido definitivo del torneo de polo más importante del mundo en el corazón de Palermo."
     },
     {
-        "id": 42,
+        "id": 49,
         "titulo": "Magia de la Navidad en Ituzaingó",
         "categoria": "Ferias y Artesanías",
         "zona": "Zona Oeste",
@@ -689,7 +814,7 @@
         "descripcion": "Finde navideño con premiaciones deportivas, bandas en vivo, parque navideño, shows infantiles, espacio sensorial y visita de Papá Noel."
     },
     {
-        "id": 43,
+        "id": 50,
         "titulo": "Fiesta de las Colectividades en Gral. Las Heras",
         "categoria": "Gourmet",
         "zona": "Zona Oeste",
@@ -706,7 +831,24 @@
         "descripcion": "Encuentro cultural con comidas del mundo, más de 30 puestos gastronómicos, shows musicales en vivo y artistas locales."
     },
     {
-        "id": 44,
+        "id": 51,
+        "titulo": "Navidad en Ituzaingó",
+        "categoria": "Ferias y Artesanías",
+        "zona": "Zona Oeste",
+        "localidad": "Ituzaingó",
+        "lugar": "Club Atlético Ituzaingó (Blas Parera 1251)",
+        "organizador": "Lupita Diseño & Arte",
+        "fecha": "2026-12-12",
+        "fechaTexto": "12 y 13 de diciembre",
+        "hora": "Horario general",
+        "precio": "Gratuito",
+        "urlCompra": null,
+        "reservaPrevia": null,
+        "urlReserva": null,
+        "descripcion": "Finde navideño con premiaciones deportivas y bandas en vivo el sábado, y parque navideño con shows infantiles y visita de Santa el domingo."
+    },
+    {
+        "id": 52,
         "titulo": "Cine Bajo las Estrellas: Ciclo Ciencia Ficción",
         "categoria": "Entretenimiento",
         "zona": "Zona Norte",
@@ -719,7 +861,7 @@
         "descripcion": "Proyección al aire libre frente al río. Se recomienda traer reposera o manta."
     },
     {
-        "id": 45,
+        "id": 53,
         "titulo": "Feria Kawaii Edición Navideña",
         "categoria": "Ferias y Artesanías",
         "zona": "CABA",
@@ -736,7 +878,7 @@
         "descripcion": "Edición especial navideña con más de 300 tiendas de indumentaria, accesorios, cosméticos, zona gastronómica oriental, desfiles, sorteos y actividades recreativas."
     },
     {
-        "id": 46,
+        "id": 54,
         "titulo": "Extremos",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -751,7 +893,7 @@
         "descripcion": "Thriller psicológico protagonizado por Silvia Kutika, Julia Zenko y Judith Gabbani sobre un enfrentamiento límite que pone a prueba la verdad, los prejuicios y la justicia."
     },
     {
-        "id": 47,
+        "id": 55,
         "titulo": "Pablo Angeli presenta \"Catarsis con Carmen\"",
         "categoria": "Entretenimiento",
         "zona": "CABA",
@@ -766,7 +908,7 @@
         "descripcion": "Show de humor y stand up de Pablo Angeli junto a su icónico personaje Carmen, con monólogos cómicos, ocurrencias familiares y participación del público."
     },
     {
-        "id": 48,
+        "id": 56,
         "titulo": "Fiesta Nacional de la Cebada Cervecera",
         "categoria": "Música y Recitales",
         "zona": "Zona Sur",
@@ -781,7 +923,7 @@
         "descripcion": "Celebración tradicional de cuatro jornadas a orillas de la laguna de Puan con recitales en vivo, jineteada, deportes náuticos, patio de comidas, feria de artesanos y zona de camping."
     },
     {
-        "id": 49,
+        "id": 57,
         "titulo": "El escritor de todas las cosas",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
@@ -796,7 +938,7 @@
         "descripcion": "Obra escrita y dirigida por Javier Daulte y protagonizada por Darío Grandinetti sobre el paso del tiempo, la memoria, los vínculos familiares y la necesidad de crear."
     },
     {
-        "id": 50,
+        "id": 58,
         "titulo": "El Jefe del Jefe",
         "categoria": "Entretenimiento",
         "zona": "CABA",
@@ -811,7 +953,7 @@
         "descripcion": "Comedia protagonizada por Diego Peretti y Federico D'Elía donde el dueño de una empresa contrata a un actor desocupado para hacerse pasar por el presidente ficticio de la compañía."
     },
     {
-        "id": 51,
+        "id": 59,
         "titulo": "Caídos del Mapa",
         "categoria": "Arte y Cultura",
         "zona": "CABA",
